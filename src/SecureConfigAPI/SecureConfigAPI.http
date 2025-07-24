@@ -1,0 +1,6 @@
+@SecureConfigAPI_HostAddress = http://localhost:5274
+
+GET {{SecureConfigAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
