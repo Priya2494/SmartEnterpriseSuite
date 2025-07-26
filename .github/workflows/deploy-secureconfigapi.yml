@@ -1,4 +1,4 @@
-name: Deploy SecureConfigAPI
+name: Build and Deploy SecureConfigAPI
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'SecureConfigAPI/**'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -14,17 +15,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.x'
+          dotnet-version: 8.x
 
-      - name: Publish project 
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Publish project
         run: dotnet publish src/SecureConfigAPI/SecureConfigAPI.csproj -c Release -o ./publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: smart-secureconfigapi-dev
-          publish-profile: ${{ secrets.AZURE_SECURECONFIGAPI_PROFILE }}
-          package: ${{env.DOTNET_ROOT}}/app
+          package: ./publish

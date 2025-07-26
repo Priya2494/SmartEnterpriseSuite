@@ -1,4 +1,4 @@
-name: Deploy UserAPI
+name: Build and Deploy UserAPI
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'UserAPI/**'
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -14,10 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up .NET
+      - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.x'
+          dotnet-version: 8.x
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Publish project
         run: dotnet publish src/UserAPI/UserAPI.csproj -c Release -o ./publish
@@ -26,5 +32,4 @@ jobs:
         uses: azure/webapps-deploy@v2
         with:
           app-name: smart-userapi-dev
-          publish-profile: ${{ secrets.AZURE_USERAPI_PROFILE }}
-          package: ${{env.DOTNET_ROOT}}/app
+          package: ./publish
