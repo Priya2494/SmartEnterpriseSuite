@@ -1,0 +1,30 @@
+name: Deploy PublicAPI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'PublicRouteAPI/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Publish project
+        run: dotnet publish PublicRouteAPI -c Release -o ${{env.DOTNET_ROOT}}/app
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: smart-publicrouteapi-dev
+          publish-profile: ${{ secrets.AZURE_PUBLICROUTEAPI_PROFILE }}
+          package: ${{env.DOTNET_ROOT}}/app
