@@ -1,7 +1,6 @@
 name: Deploy SecureConfigAPI
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -20,8 +19,8 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Publish project
-        run: dotnet publish SecureConfigAPI -c Release -o ${{env.DOTNET_ROOT}}/app
+      - name: Publish project 
+        run: dotnet publish SecureConfigAPI/SecureConfigAPI.csproj -c Release -o ./publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2

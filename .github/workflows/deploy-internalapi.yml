@@ -1,7 +1,6 @@
 name: Deploy InternalAPI
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -21,7 +20,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Publish project
-        run: dotnet publish InternalAPI -c Release -o ${{env.DOTNET_ROOT}}/app
+        run: dotnet publish InternalAPI/InternalAPI.csproj -c Release -o ./publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2

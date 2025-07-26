@@ -1,6 +1,5 @@
 name: Deploy DocumentAPI
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -20,7 +19,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Publish project
-        run: dotnet publish DocumentAPI -c Release -o ${{env.DOTNET_ROOT}}/app
+        run: dotnet publish DocumentAPI/DocumentAPI.csproj -c Release -o ./publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
