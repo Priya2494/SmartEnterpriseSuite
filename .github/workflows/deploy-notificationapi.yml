@@ -1,4 +1,5 @@
 name: Deploy NotificationAPI
+
 on:
   push:
     branches:
@@ -19,7 +20,7 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Publish project
-        run: dotnet publish NotificationAPI/NotificationAPI.csproj -c Release -o ./publish
+        run: dotnet publish src/NotificationAPI/NotificationAPI.csproj -c Release -o ./publish
 
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
